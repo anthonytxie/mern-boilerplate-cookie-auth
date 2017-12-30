@@ -4,14 +4,19 @@ import { Link } from 'react-router-dom';
 
 class Header extends Component {
   renderContent() {
-    switch (this.props.auth) {
+    switch (this.props.user) {
       case null:
         return;
       case false:
         return (
-          <li>
-            <a href="/api/auth/google">Login With Google</a>
-          </li>
+          <ul>
+            <li>
+              <a href="/signin">Sign In</a>
+            </li>
+            <li>
+              <a href="/signup">Sign Up</a>
+            </li>
+          </ul>
         );
       default:
         return [
@@ -27,7 +32,7 @@ class Header extends Component {
       <nav>
         <div className="nav-wrapper">
           <Link
-            to={this.props.auth ? '/surveys' : '/'}
+            to={this.props.user ? '/dashboard' : '/'}
             className="left brand-logo"
           >
             Lunar
@@ -39,9 +44,10 @@ class Header extends Component {
   }
 }
 
-function mapStateToProps({ auth }) {
+function mapStateToProps({ auth: { user, authError } }) {
   return {
-    auth,
+    user,
+    authError,
   };
 }
 

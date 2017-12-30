@@ -3,18 +3,14 @@ import AuthForm from './AuthForm';
 import { connect } from 'react-redux';
 import * as actions from '../../actions/index.js';
 
-class SignUp extends Component {
+class SignIn extends Component {
   render() {
     return (
       <div>
-        <AuthForm onSubmit={this.props.userLogin} auth={this.props.auth} />
+        <AuthForm onSubmit={this.props.signInUser} auth="Sign In" />
       </div>
     );
   }
 }
 
-function mapStateToProps(state) {
-  return { auth: state.auth };
-}
-
-export default connect(mapStateToProps, actions)(SignUp);
+export default connect(null, actions)(SignIn);

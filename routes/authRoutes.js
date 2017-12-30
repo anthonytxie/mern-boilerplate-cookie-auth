@@ -4,6 +4,8 @@ const authRouter = express();
 const User = require('../db/models/User.js');
 
 //=============OAUTH ROUTES========================//
+//=============GOOGLE=============================//
+
 authRouter.get(
   '/api/auth/google',
   passport.authenticate('google', {
@@ -15,7 +17,22 @@ authRouter.get(
   '/api/auth/google/callback',
   passport.authenticate('google'),
   (req, res) => {
-    res.redirect('/surveys');
+    res.redirect('/dashboard');
+  }
+);
+
+//=============FACEBOOK=============================//
+
+authRouter.get(
+  '/api/auth/facebook',
+  passport.authenticate('facebook', { scope: ['email'] })
+);
+
+authRouter.get(
+  '/api/auth/facebook/callback',
+  passport.authenticate('facebook'),
+  (req, res) => {
+    res.redirect('/dashboard');
   }
 );
 
@@ -27,7 +44,7 @@ authRouter.post('/api/auth/signin', (req, res, next) => {
       return next(err);
     }
     if (!user) {
-      return res.json({ message: info.message });
+      return res.status(401).json({ error: info.message });
     }
     res.json(user);
   })(req, res, next);
@@ -37,10 +54,10 @@ authRouter.post('/api/auth/signup', async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOrCreate('local', { email, password });
-    res.send(user);
+    res.json(user);
   } catch (e) {
     if (e.errmsg.includes('duplicate')) {
-      res.send('this e-mail is already being used');
+      res.status(401).json({ error: 'this e-mail is already being used' });
     }
   }
 });
@@ -48,6 +65,9 @@ authRouter.post('/api/auth/signup', async (req, res) => {
 //=============USER ROUTES========================//
 
 authRouter.get('/api/current_user', (req, res) => {
+  if (!req.user) {
+    res.status(500);
+  }
   res.send(req.user);
 });
 

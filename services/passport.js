@@ -3,6 +3,8 @@ const User = require('../db/models/User.js');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const LocalStrategy = require('passport-local');
+const facebookStrategy = require('passport-facebook').Strategy;
+
 const bcrypt = require('bcrypt-as-promised');
 
 const localOptions = { usernameField: 'email' };
@@ -24,7 +26,7 @@ passport.use(
         }
       }
     } catch (e) {
-      done(null, false, { message: 'invalid email or password' });
+      done(null, false, { error: 'invalid email or password' });
     }
   })
 );
@@ -37,7 +39,22 @@ passport.use(
       callbackURL: '/api/auth/google/callback',
     },
     async (accessToken, refreshToken, profile, done) => {
-      const user = await User.createOAuthUser('google', profile.id);
+      const user = await User.findOrCreate('google', { oauthId: profile.id });
+      done(null, user);
+    }
+  )
+);
+
+passport.use(
+  new facebookStrategy(
+    {
+      clientID: process.env.facebookClientId,
+      clientSecret: process.env.facebookClientSecret,
+      callbackURL: '/api/auth/facebook/callback',
+      profileFields: ['id', 'emails', 'name'],
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      const user = await User.findOrCreate('facebook', { oauthId: profile.id });
       done(null, user);
     }
   )

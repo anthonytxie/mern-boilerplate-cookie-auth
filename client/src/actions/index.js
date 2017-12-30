@@ -13,20 +13,25 @@ export const fetchUser = () => async dispatch => {
   }
 };
 
-export const createUser = (email, password) => async dispatch => {
+export const createUser = (email, password, history) => async dispatch => {
   try {
     const res = await axios.post('/api/auth/signup', { email, password });
     dispatch({ type: CREATE_USER, payload: res.data });
+    history.push('/');
   } catch (e) {
-    dispatch({ type: AUTH_ERROR, payload: false });
+    dispatch({ type: AUTH_ERROR, payload: 'E-mail is already taken' });
   }
 };
 
-export const loginUser = (email, password) => async dispatch => {
+export const signInUser = (email, password, history) => async dispatch => {
   try {
-    const res = await axios.post('/api/auth/login', { email, password });
-    dispatch({ type: CREATE_USER, payload: res.data });
+    const res = await axios.post('/api/auth/signin', { email, password });
+    dispatch({ type: FETCH_USER, payload: res.data });
+    history.push('/');
   } catch (e) {
-    dispatch({ type: AUTH_ERROR, payload: false });
+    dispatch({
+      type: AUTH_ERROR,
+      payload: 'Invalid E-mail & Password Combination',
+    });
   }
 };

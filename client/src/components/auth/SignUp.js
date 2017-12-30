@@ -5,7 +5,7 @@ import * as actions from '../../actions/index.js';
 
 class SignUp extends Component {
   render() {
-    return <AuthForm onSubmit={this.props.createUser} />;
+    return <AuthForm onSubmit={this.props.createUser} auth="Sign Up" />;
   }
 }
 

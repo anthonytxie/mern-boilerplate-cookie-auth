@@ -6,6 +6,7 @@ const userSchema = new Schema({
   email: { type: String, unique: true },
   password: String,
   googleId: String,
+  facebookId: String,
   createdDate: { type: Date, default: Date.now() },
 });
 
@@ -46,14 +47,17 @@ userSchema.statics.findOrCreate = async function(strategy, authDetails) {
 };
 
 userSchema.pre('save', async function(next) {
-  try {
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(this.password, salt);
-    this.password = hashedPassword;
-    next();
-  } catch (e) {
-    next(e);
+  if (this.password) {
+    try {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(this.password, salt);
+      this.password = hashedPassword;
+      next();
+    } catch (e) {
+      next(e);
+    }
   }
+  next();
 });
 
 const User = mongoose.model('Users', userSchema);

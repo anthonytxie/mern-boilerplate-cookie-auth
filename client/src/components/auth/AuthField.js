@@ -1,16 +1,16 @@
 import React from 'react';
 
 const AuthField = ({
+  input,
+  label,
   type,
   placeholder,
-  label,
-  input,
   meta: { touched, error },
 }) => {
   return (
     <div>
       <label> {label}</label>
-      <input {...input} />
+      <input {...input} type={type} placeholder={placeholder} />
       <div className="red-text">{touched && error}</div>
     </div>
   );

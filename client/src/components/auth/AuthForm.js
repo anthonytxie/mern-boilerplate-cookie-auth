@@ -3,6 +3,7 @@ import { Field, reduxForm } from 'redux-form';
 import _ from 'lodash';
 import { withRouter } from 'react-router-dom';
 import AuthField from './AuthField';
+import { connect } from 'react-redux';
 
 const authFields = [
   {
@@ -16,7 +17,7 @@ const authFields = [
     name: 'password',
     type: 'password',
     placeholder: '*******',
-    label: 'password',
+    label: 'Password',
   },
 ];
 
@@ -25,7 +26,11 @@ class AuthForm extends Component {
     this.props.onSubmit(values.email, values.password, this.props.history);
   }
 
+  renderAuthError() {
+    return <div className="auth-error">{this.props.authError}</div>;
+  }
   render() {
+    console.log(this.props.authError);
     const { handleSubmit, pristine, submitting } = this.props;
     return (
       <div>
@@ -34,7 +39,8 @@ class AuthForm extends Component {
           {authFields.map(field => {
             return (
               <Field
-                type={field.text}
+                key={field.name}
+                type={field.type}
                 name={field.name}
                 placeholder={field.placeholder}
                 label={field.label}
@@ -43,29 +49,39 @@ class AuthForm extends Component {
             );
           })}
           <div>
-            <button
-              className="btn"
-              type="submit"
-              disabled={pristine || submitting}
-            >
-              Submit
-            </button>
+            <div>{this.renderAuthError()}</div>
+
+            <div className="row auth-row">
+              <div className="col s4">
+                <button
+                  className="btn"
+                  type="submit"
+                  disabled={pristine || submitting}
+                >
+                  Submit
+                </button>
+              </div>
+              <div className="col s4 ">
+                <a
+                  className="waves-effect waves-light btn social google"
+                  href="api/auth/google"
+                >
+                  <i className="fa fa-google" />
+                  {this.props.auth}
+                </a>
+              </div>
+              <div className="col s4">
+                <a
+                  className="waves-effect waves-light btn social facebook"
+                  href="/api/auth/facebook"
+                >
+                  <i className="fa fa-facebook" href="/api/auth/facebook" />
+                  {this.props.auth}
+                </a>
+              </div>
+            </div>
           </div>
         </form>
-        <div className="row">
-          <div className="col s4 offset-s4">
-            <a class="waves-effect waves-light btn social google">
-              <i class="fa fa-google" />
-              {this.props.auth ? 'Sign In' : 'Sign Up'}
-            </a>
-          </div>
-          <div className="col s4">
-            <a className="waves-effect waves-light btn social facebook">
-              <i className="fa fa-facebook" />
-              {this.props.auth ? 'Sign In' : 'Sign Up'}
-            </a>
-          </div>
-        </div>
       </div>
     );
   }
@@ -85,7 +101,17 @@ const validate = values => {
   }
   return errors;
 };
-export default reduxForm({
-  form: 'signin',
-  validate: validate,
-})(withRouter(AuthForm));
+
+function mapStateToProps({ auth: { user, authError } }) {
+  return {
+    user,
+    authError,
+  };
+}
+
+export default connect(mapStateToProps)(
+  reduxForm({
+    form: 'signin',
+    validate: validate,
+  })(withRouter(AuthForm))
+);
