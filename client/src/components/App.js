@@ -4,6 +4,8 @@ import Header from './Header';
 import { connect } from 'react-redux';
 import * as actions from '../actions';
 import Landing from './Landing';
+import SignIn from './auth/SignIn';
+import SignUp from './auth/SignUp';
 
 class App extends Component {
   componentDidMount() {
@@ -17,6 +19,8 @@ class App extends Component {
           <div className="container">
             <Header />
             <Route exact path="/" component={Landing} />
+            <Route exact path="/signin" component={SignIn} />
+            <Route exact path="/signup" component={SignUp} />
           </div>
         </BrowserRouter>
       </div>

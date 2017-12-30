@@ -5,8 +5,6 @@ const passport = require('passport');
 const express = require('express');
 const cookieSession = require('cookie-session');
 const authRouter = require('./routes/authRoutes');
-const billingRouter = require('./routes/billingRoutes');
-const surveyRouter = require('./routes/surveyRoutes.js');
 require('./services/passport');
 
 const app = express();
@@ -22,8 +20,6 @@ app.use(bodyParser.json());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(authRouter);
-app.use(billingRouter);
-app.use(surveyRouter);
 if (process.env.NODE_ENV === 'production') {
   //express will serve up production assets
   app.use(express.static('client/build'));
