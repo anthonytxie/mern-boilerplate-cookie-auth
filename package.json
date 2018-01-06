@@ -29,7 +29,6 @@
     "ejs": "^2.5.7",
     "express": "^4.15.2",
     "font-awesome": "^4.7.0",
-    "localtunnel": "^1.8.3",
     "lodash": "^4.17.4",
     "materialize-social": "^1.0.3",
     "mongoose": "^4.9.9",
@@ -38,8 +37,6 @@
     "passport-google-oauth20": "^1.0.0",
     "passport-local": "^1.0.0",
     "path-parser": "^3.0.1",
-    "redux-form": "^7.2.0",
-    "sendgrid": "^5.2.3",
     "serialize-error": "^2.1.0",
     "stripe": "^5.4.0",
     "winston": "^2.4.0"
